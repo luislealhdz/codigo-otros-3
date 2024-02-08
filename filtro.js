@@ -1,63 +1,85 @@
 // Tenemos un li de productos
 
-const productos = [
-  {nombre: "Zapato negro", tipo: "zapato", color: "negro", img: "./taco-negro.jpg"},
-  {nombre: "Zapato azul", tipo: "zapato", color: "azul", img: "./taco-azul.jpg"},
-  {nombre: "Bota negra", tipo: "bota", color: "negro", img: "./bota-negra.jpg"},
-  {nombre: "Bota azul", tipo: "bota", color: "azul", img: "./bota-azul.jpg"},
-  {nombre: "Zapato rojo", tipo: "zapato", color: "rojo", img: "./zapato-rojo.jpg"}
-]
+const products = [
+    {
+        nombre: "Zapato negro",
+        tipo: "zapato",
+        color: "negro",
+        img: "./taco-negro.jpg",
+    },
+    {
+        nombre: "Zapato azul",
+        tipo: "zapato",
+        color: "azul",
+        img: "./taco-azul.jpg",
+    },
+    {
+        nombre: "Bota negra",
+        tipo: "bota",
+        color: "negro",
+        img: "./bota-negra.jpg",
+    },
+    {
+        nombre: "Bota azul",
+        tipo: "bota",
+        color: "azul",
+        img: "./bota-azul.jpg",
+    },
+    {
+        nombre: "Zapato rojo",
+        tipo: "zapato",
+        color: "rojo",
+        img: "./zapato-rojo.jpg",
+    },
+];
 
-const li = document.getElementsByName("lista-de-productos")
-const $i = document.querySelector('.input');
+const productsList = document.getElementById("lista-de-productos");
+const valueToFilter = document.querySelector(".input");
+const filterBtn = document.querySelector("#filter");
 
-for (let i = 0; i < productos.length; i++) {
-  var d = document.createElement("div")
-  d.classList.add("producto")
+const createCardProduct = ({ nombre, img }) => {
+    // const { nombre, img } = product;
+    const card = document.createElement("div");
+    card.classList.add("producto");
 
-  var ti = document.createElement("p")
-  ti.classList.add("titulo")
-  ti.textContent = productos[i].nombre
-  
-  var imagen = document.createElement("img");
-  imagen.setAttribute('src', productos[i].img);
+    const productName = document.createElement("p");
+    productName.classList.add("titulo");
+    productName.textContent = nombre;
 
-  d.appendChild(ti)
-  d.appendChild(imagen)
+    const imageProduct = document.createElement("img");
+    imageProduct.src = img;
 
-  li.appendChild(d)
-}
+    card.appendChild(productName);
+    card.appendChild(imageProduct);
 
-displayProductos(productos)
-const botonDeFiltro = document.querySelector("button");
+    productsList.appendChild(card);
+};
 
-botonDeFiltro.onclick = function() {
-  while (li.firstChild) {
-    li.removeChild(li.firstChild);
-  }
+const displayProducts = (products) => {
+    for (const product of products) {
+        createCardProduct(product);
+    }
+};
 
-  const texto = $i.value;
-  console.log(texto);
-  const productosFiltrados = filtrado(productos, texto );
+const filterProducts = (productos = [], texto) => {
+    return productos.filter(
+        (item) => item.tipo.includes(texto) || item.color.includes(texto)
+    );
+};
 
-  for (let i = 0; i < productosFiltrados.length; i++) {
-    var d = document.createElement("div")
-    d.classList.add("producto")
-  
-    var ti = document.createElement("p")
-    ti.classList.add("titulo")
-    ti.textContent = productosFiltrados[i].nombre
-    
-    var imagen = document.createElement("img");
-    imagen.setAttribute('src', productosFiltrados[i].img);
-  
-    d.appendChild(ti)
-    d.appendChild(imagen)
-  
-    li.appendChild(d)
-  }
-}
+displayProducts(products);
 
-const filtrado = (productos = [], texto) => {
-  return productos.filter(item => item.tipo.includes(texto) || item.color.includes(texto));
-}  
+filterBtn.addEventListener("click", () => {
+    while (productsList.firstChild) {
+        productsList.removeChild(productsList.firstChild);
+    }
+
+    const valueToSearch = valueToFilter.value;
+    const searchResults = filterProducts(products, valueToSearch);
+
+    if (searchResults.length === 0) {
+        displayProducts(products);
+    } else {
+        displayProducts(searchResults);
+    }
+});
